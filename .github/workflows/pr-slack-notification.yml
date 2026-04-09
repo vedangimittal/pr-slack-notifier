@@ -16,24 +16,11 @@ jobs:
           curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
           -H "Content-Type: application/json" \
           -d '{
-            "text": "🧪 Test Notification from ${{ github.repository }}",
-            "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "🧪 Test: PR Slack Notification",
-                  "emoji": true
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "This is a test notification triggered manually from GitHub Actions.\n\n*Repository:* ${{ github.repository }}\n*Triggered by:* ${{ github.actor }}"
-                }
-              }
-            ]
+            "pr_number": "TEST",
+            "pr_title": "Test Notification from GitHub Actions",
+            "pr_url": "https://github.com/${{ github.repository }}",
+            "pr_author": "${{ github.actor }}",
+            "repository": "${{ github.repository }}"
           }'
       
       - name: Send Slack Notification (PR Mode)
@@ -42,85 +29,14 @@ jobs:
           curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
           -H "Content-Type: application/json" \
           -d '{
-            "text": "New Pull Request in ${{ github.repository }}",
-            "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "🔔 New Pull Request",
-                  "emoji": true
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Repository:*\n${{ github.repository }}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*PR Number:*\n#${{ github.event.pull_request.number }}"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Title:*\n${{ github.event.pull_request.title }}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Author:*\n${{ github.event.pull_request.user.login }}"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Branch:*\n`${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Status:*\n${{ github.event.pull_request.draft && '📝 Draft' || '✅ Ready for Review' }}"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "*Description:*\n${{ github.event.pull_request.body || '_No description provided_' }}"
-                }
-              },
-              {
-                "type": "actions",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "View Pull Request",
-                      "emoji": true
-                    },
-                    "url": "${{ github.event.pull_request.html_url }}",
-                    "style": "primary"
-                  },
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "View Files Changed",
-                      "emoji": true
-                    },
-                    "url": "${{ github.event.pull_request.html_url }}/files"
-                  }
-                ]
-              }
-            ]
+            "pr_number": "${{ github.event.pull_request.number }}",
+            "pr_title": "${{ github.event.pull_request.title }}",
+            "pr_url": "${{ github.event.pull_request.html_url }}",
+            "pr_author": "${{ github.event.pull_request.user.login }}",
+            "repository": "${{ github.repository }}",
+            "pr_description": "${{ github.event.pull_request.body }}",
+            "source_branch": "${{ github.event.pull_request.head.ref }}",
+            "target_branch": "${{ github.event.pull_request.base.ref }}"
           }'
+
+# Made with Bob

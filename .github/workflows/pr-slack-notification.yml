@@ -3,13 +3,41 @@ name: PR Slack Notification
 on:
   pull_request:
     types: [opened, reopened]
+  workflow_dispatch:
 
 jobs:
   notify-slack:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Send Slack Notification
+      - name: Send Slack Notification (Test Mode)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "text": "🧪 Test Notification from ${{ github.repository }}",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "🧪 Test: PR Slack Notification",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "This is a test notification triggered manually from GitHub Actions.\n\n*Repository:* ${{ github.repository }}\n*Triggered by:* ${{ github.actor }}"
+                }
+              }
+            ]
+          }'
+      
+      - name: Send Slack Notification (PR Mode)
+        if: github.event_name == 'pull_request'
         run: |
           curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
           -H "Content-Type: application/json" \

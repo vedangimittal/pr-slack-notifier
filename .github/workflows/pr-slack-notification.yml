@@ -36,28 +36,31 @@ jobs:
             ]
           }'
       
+      - name: Set notification header
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+        id: header
+        run: |
+          if [ "${{ github.event.action }}" = "ready_for_review" ]; then
+            echo "text=✅ PR Ready for Review" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.action }}" = "synchronize" ]; then
+            echo "text=🔄 PR Updated" >> $GITHUB_OUTPUT
+          else
+            echo "text=🔔 New Pull Request" >> $GITHUB_OUTPUT
+          fi
+      
       - name: Send Slack Notification (PR Mode)
         if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
         run: |
-          if [ "${{ github.event.action }}" = "ready_for_review" ]; then
-            HEADER="✅ PR Ready for Review"
-          elif [ "${{ github.event.action }}" = "synchronize" ]; then
-            HEADER="🔄 PR Updated"
-          else
-            HEADER="🔔 New Pull Request"
-          fi
-          
           curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
           -H "Content-Type: application/json" \
-          --data-binary @- << EOF
-          {
+          -d '{
             "text": "Pull Request in ${{ github.repository }}",
             "blocks": [
               {
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "$HEADER",
+                  "text": "${{ steps.header.outputs.text }}",
                   "emoji": true
                 }
               },
@@ -121,5 +124,4 @@ jobs:
                 ]
               }
             ]
-          }
-          EOF
+          }'

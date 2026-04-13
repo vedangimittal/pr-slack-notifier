@@ -2,7 +2,7 @@ name: PR Slack Notification
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, ready_for_review, synchronize]
   workflow_dispatch:
 
 jobs:
@@ -37,18 +37,27 @@ jobs:
           }'
       
       - name: Send Slack Notification (PR Mode)
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
         run: |
+          if [ "${{ github.event.action }}" = "ready_for_review" ]; then
+            HEADER="✅ PR Ready for Review"
+          elif [ "${{ github.event.action }}" = "synchronize" ]; then
+            HEADER="🔄 PR Updated"
+          else
+            HEADER="🔔 New Pull Request"
+          fi
+          
           curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
           -H "Content-Type: application/json" \
-          -d '{
-            "text": "New Pull Request in ${{ github.repository }}",
+          --data-binary @- << EOF
+          {
+            "text": "Pull Request in ${{ github.repository }}",
             "blocks": [
               {
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "🔔 New Pull Request",
+                  "text": "$HEADER",
                   "emoji": true
                 }
               },
@@ -112,6 +121,5 @@ jobs:
                 ]
               }
             ]
-          }'
-
-# Made with Bob
+          }
+          EOF

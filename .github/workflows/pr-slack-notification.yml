@@ -58,10 +58,6 @@ jobs:
                   {
                     "type": "mrkdwn",
                     "text": "*Repository:*\n${{ github.repository }}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*PR Number:*\n#${{ github.event.pull_request.number }}"
                   }
                 ]
               },
@@ -84,10 +80,6 @@ jobs:
                   {
                     "type": "mrkdwn",
                     "text": "*Branch:*\n`${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Status:*\n${{ github.event.pull_request.draft && '📝 Draft' || '✅ Ready for Review' }}"
                   }
                 ]
               },

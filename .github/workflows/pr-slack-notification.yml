@@ -53,11 +53,11 @@ jobs:
                 }
               },
               {
-                "type": "section",
-                "fields": [
+                "type": "context",
+                "elements": [
                   {
                     "type": "mrkdwn",
-                    "text": "*Repository:*\n${{ github.repository }}"
+                    "text": "👥 @ebmc-gui-squad"
                   }
                 ]
               },
@@ -66,7 +66,7 @@ jobs:
                 "fields": [
                   {
                     "type": "mrkdwn",
-                    "text": "*Title:*\n${{ github.event.pull_request.title }}"
+                    "text": "*Repository:*\n${{ github.repository }}"
                   },
                   {
                     "type": "mrkdwn",
@@ -77,6 +77,10 @@ jobs:
               {
                 "type": "section",
                 "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Title:*\n${{ github.event.pull_request.title }}"
+                  },
                   {
                     "type": "mrkdwn",
                     "text": "*Branch:*\n`${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`"

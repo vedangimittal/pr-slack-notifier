@@ -65,13 +65,11 @@ jobs:
                 }
               },
               {
-                "type": "context",
-                "elements": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "👥 @ebmc-gui-squad"
-                  }
-                ]
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*👥 @ebmc-gui-squad, Please review*"
+                }
               },
               {
                 "type": "section",

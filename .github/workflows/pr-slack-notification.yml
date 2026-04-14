@@ -69,35 +69,16 @@ jobs:
                 "elements": [
                   {
                     "type": "mrkdwn",
-                    "text": "👥 @ebmc-gui-squad"
+                    "text": "👥 @ebmc-gui-squad, Please review:"
                   }
                 ]
               },
               {
                 "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Repository:*\n${{ github.repository }}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Author:*\n${{ github.event.pull_request.user.login }}"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Title:*\n${{ github.event.pull_request.title }}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Branch:*\n`${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`"
-                  }
-                ]
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Repository:* ${{ github.repository }}\n*Author:* ${{ github.event.pull_request.user.login }}\n*Title:* ${{ github.event.pull_request.title }}\n*Branch:* `${{ github.event.pull_request.head.ref }}` → `${{ github.event.pull_request.base.ref }}`"
+                }
               },
               {
                 "type": "actions",

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Slack Notification Setup Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid #444;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .file-path {
+            background: #fff9c4;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #f57f17;
+            font-weight: 500;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔔 PR Slack Notification Setup</h1>
+            <p>Complete guide to integrate GitHub Actions with Slack notifications</p>
+        </header>
+        
+        <div class="content">
+            <div class="info-box">
+                <strong>📋 Overview:</strong> This guide will help you set up automated Slack notifications for Pull Requests in your GitHub repository using GitHub Actions.
+            </div>
+
+            <!-- STEP 1: WORKFLOW FILE -->
+            <h2><span class="step-number">1</span> Copy and Merge the Workflow File</h2>
+            
+            <div class="step">
+                <h3>📁 File Location</h3>
+                <p>Copy the workflow file to your repository's workflow directory:</p>
+                <p class="file-path">.github/workflows/pr-slack-notification.yml</p>
+            </div>
+
+            <div class="step">
+                <h3>📝 Workflow File Details</h3>
+                <p><strong>File Name:</strong> <code>pr-slack-notification.yml</code></p>
+                <p><strong>Purpose:</strong> Automatically sends Slack notifications when PR events occur</p>
+                
+                <h4 style="margin-top: 15px;">Trigger Events:</h4>
+                <ul>
+                    <li><strong>opened:</strong> When a new PR is created</li>
+                    <li><strong>reopened:</strong> When a closed PR is reopened</li>
+                    <li><strong>ready_for_review:</strong> When a draft PR is marked ready</li>
+                    <li><strong>synchronize:</strong> When new commits are pushed to the PR</li>
+                    <li><strong>workflow_dispatch:</strong> Manual trigger for testing</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>🔧 How to Copy the File</h3>
+                <ol>
+                    <li>Create the <code>.github/workflows/</code> directory in your repository if it doesn't exist:
+                        <pre><code>mkdir -p .github/workflows</code></pre>
+                    </li>
+                    <li>Copy the <code>pr-slack-notification.yml</code> file to this directory</li>
+                    <li>If you already have workflows, ensure this file doesn't conflict with existing ones</li>
+                    <li>Commit and push the file to your repository:
+                        <pre><code>git add .github/workflows/pr-slack-notification.yml
+git commit -m "Add PR Slack notification workflow"
+git push</code></pre>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> The workflow file references <code>${{ secrets.SLACK_WEBHOOK_URL }}</code> which must be configured in Step 2 before the workflow will function properly.
+            </div>
+
+            <!-- STEP 2: SLACK SETUP -->
+            <h2><span class="step-number">2</span> Slack Notification Setup</h2>
+
+            <div class="info-box">
+                <strong>ℹ️ Note:</strong> Slack integration is used for PR notifications. This setup is required for the workflow to send messages to your Slack channel.
+            </div>
+
+            <div class="step">
+                <h3>🔗 Create a Slack Webhook</h3>
+                <ol>
+                    <li>Go to <a href="https://api.slack.com/apps" target="_blank">https://api.slack.com/apps</a></li>
+                    <li>Click <strong>"Create New App"</strong></li>
+                    <li>Select <strong>"From scratch"</strong></li>
+                    <li>Enter an app name (e.g., "PR Notifications") and select your workspace</li>
+                    <li>Click <strong>"Create App"</strong></li>
+                    <li>In the left sidebar, click <strong>"Incoming Webhooks"</strong></li>
+                    <li>Toggle <strong>"Activate Incoming Webhooks"</strong> to <strong>On</strong></li>
+                    <li>Scroll down and click <strong>"Add New Webhook to Workspace"</strong></li>
+                    <li>Select the target channel where you want notifications to appear</li>
+                    <li>Click <strong>"Allow"</strong></li>
+                    <li>Copy the webhook URL (it will look like: <code>https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX</code>)</li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <h3>💻 Local Slack Configuration (Optional)</h3>
+                <p>If you're running the notification system locally for testing:</p>
+                <ol>
+                    <li>Copy <code>.env.example</code> to a local <code>.env</code> file:
+                        <pre><code>cp .env.example .env</code></pre>
+                    </li>
+                    <li>Add your webhook URL to the <code>.env</code> file:
+                        <pre><code>SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL</code></pre>
+                    </li>
+                </ol>
+                <div class="warning-box">
+                    <strong>⚠️ Security:</strong> Never commit the <code>.env</code> file to your repository. Ensure it's listed in <code>.gitignore</code>.
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>🔐 GitHub Actions Slack Configuration</h3>
+                <p>Add the webhook URL as a repository secret for GitHub Actions:</p>
+                <ol>
+                    <li>Go to your GitHub repository</li>
+                    <li>Click <strong>Settings</strong> (repository settings, not your account)</li>
+                    <li>In the left sidebar, expand <strong>Secrets and variables</strong></li>
+                    <li>Click <strong>Actions</strong></li>
+                    <li>Click <strong>"New repository secret"</strong></li>
+                    <li>Enter the following details:
+                        <ul>
+                            <li><strong>Name:</strong> <code>SLACK_WEBHOOK_URL</code></li>
+                            <li><strong>Value:</strong> Your Slack webhook URL</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>"Add secret"</strong></li>
+                </ol>
+                
+                <div class="success-box">
+                    <strong>✅ Path Summary:</strong> GitHub Repository → Settings → Secrets and variables → Actions → New repository secret
+                </div>
+            </div>
+
+            <!-- STEP 3: CUSTOMIZATION -->
+            <h2><span class="step-number">3</span> Workflow Customization</h2>
+
+            <div class="step">
+                <h3>🎨 Customization Options</h3>
+                <p>The workflow file can be customized to fit your team's requirements:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customization</th>
+                            <th>Location in File</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Trigger Events</strong></td>
+                            <td>Lines 3-6</td>
+                            <td>Add/remove PR event types (e.g., <code>closed</code>, <code>labeled</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Team Mention</strong></td>
+                            <td>Line 71</td>
+                            <td>Change <code>@ebmc-gui-squad</code> to your team's Slack handle</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Notification Icons</strong></td>
+                            <td>Lines 44-48</td>
+                            <td>Customize emojis for different PR states</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Message Format</strong></td>
+                            <td>Lines 56-125</td>
+                            <td>Modify the Slack Block Kit JSON structure</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Draft PR Handling</strong></td>
+                            <td>Line 52</td>
+                            <td>Currently skips draft PRs; remove condition to include them</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="step">
+                <h3>📝 Example Customizations</h3>
+                
+                <h4>Change Team Mention:</h4>
+                <pre><code>"text": "*👥 @your-team-name, Please review*"</code></pre>
+                
+                <h4>Add More PR Events:</h4>
+                <pre><code>on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize, closed, labeled]</code></pre>
+                
+                <h4>Include Draft PRs:</h4>
+                <p>Remove the condition <code>&& github.event.pull_request.draft == false</code> from lines 40 and 52</p>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Tip:</strong> You can test your workflow manually using the "workflow_dispatch" trigger. Go to Actions → PR Slack Notification → Run workflow.
+            </div>
+
+            <!-- TESTING -->
+            <h2>🧪 Testing Your Setup</h2>
+
+            <div class="step">
+                <h3>Manual Test</h3>
+                <ol>
+                    <li>Go to your repository on GitHub</li>
+                    <li>Click the <strong>Actions</strong> tab</li>
+                    <li>Select <strong>"PR Slack Notification"</strong> from the workflows list</li>
+                    <li>Click <strong>"Run workflow"</strong></li>
+                    <li>Select the branch and click <strong>"Run workflow"</strong></li>
+                    <li>Check your Slack channel for the test notification</li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <h3>Live Test</h3>
+                <ol>
+                    <li>Create a new branch in your repository</li>
+                    <li>Make a small change and commit it</li>
+                    <li>Open a Pull Request</li>
+                    <li>Check your Slack channel for the notification</li>
+                </ol>
+            </div>
+
+            <!-- TROUBLESHOOTING -->
+            <h2>🔍 Troubleshooting</h2>
+
+            <div class="step">
+                <h3>Common Issues</h3>
+                
+                <h4>❌ No notification received:</h4>
+                <ul>
+                    <li>Verify the <code>SLACK_WEBHOOK_URL</code> secret is set correctly in GitHub</li>
+                    <li>Check if the PR is a draft (drafts are skipped by default)</li>
+                    <li>Review the Actions tab for workflow execution logs</li>
+                    <li>Ensure the Slack app has permission to post in the channel</li>
+                </ul>
+                
+                <h4>❌ Workflow not triggering:</h4>
+                <ul>
+                    <li>Confirm the workflow file is in <code>.github/workflows/</code></li>
+                    <li>Check the file has a <code>.yml</code> or <code>.yaml</code> extension</li>
+                    <li>Verify the YAML syntax is correct (no indentation errors)</li>
+                    <li>Ensure the PR event type matches the configured triggers</li>
+                </ul>
+                
+                <h4>❌ 400 Bad Request error:</h4>
+                <ul>
+                    <li>Verify the webhook URL is correct and complete</li>
+                    <li>Check if the Slack app is still installed in your workspace</li>
+                    <li>Ensure the JSON payload format is valid</li>
+                </ul>
+            </div>
+
+            <!-- ADDITIONAL INFO -->
+            <h2>📚 Additional Information</h2>
+
+            <div class="step">
+                <h3>Notification Content</h3>
+                <p>Each PR notification includes:</p>
+                <ul>
+                    <li>📊 <strong>Repository name</strong></li>
+                    <li>👤 <strong>PR author</strong></li>
+                    <li>📝 <strong>PR title</strong></li>
+                    <li>🌿 <strong>Source and target branches</strong></li>
+                    <li>🔗 <strong>Direct link to the PR</strong></li>
+                    <li>📄 <strong>Link to view changed files</strong></li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>Notification Types</h3>
+                <ul>
+                    <li>🔔 <strong>New Pull Request:</strong> When a PR is first opened</li>
+                    <li>✅ <strong>PR Ready for Review:</strong> When a draft PR becomes ready</li>
+                    <li>🔄 <strong>PR Updated:</strong> When new commits are pushed</li>
+                    <li>🧪 <strong>Test Notification:</strong> Manual workflow dispatch</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <strong>🎉 Congratulations!</strong> Your PR Slack notification system is now set up. Team members will receive instant notifications for all PR activities.
+            </div>
+        </div>
+
+        <footer>
+            <p>📖 For more information, visit the <a href="https://docs.github.com/en/actions" target="_blank">GitHub Actions Documentation</a> and <a href="https://api.slack.com/messaging/webhooks" target="_blank">Slack Webhooks Guide</a></p>
+            <p style="margin-top: 10px; color: #999;">Last updated: 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
